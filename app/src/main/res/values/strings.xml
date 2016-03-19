@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SharkFeed</string>
+    <string name="action_settings">Settings</string>
+    <string name="flickr_api_key">949e98778755d1982f537d56236bbb42</string>
+</resources>
