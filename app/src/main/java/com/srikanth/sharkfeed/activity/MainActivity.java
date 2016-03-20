@@ -1,50 +1,58 @@
 package com.srikanth.sharkfeed.activity;
 
-import android.app.LoaderManager;
-import android.content.Loader;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.srikanth.sharkfeed.R;
-import com.srikanth.sharkfeed.loader.ImageFeedLoader;
-import com.srikanth.sharkfeed.loader.LoaderId;
-import com.srikanth.sharkfeed.model.FlickrPhotosFeed;
+import com.srikanth.sharkfeed.adapter.PhotoAdapter;
+import com.srikanth.sharkfeed.model.Photo;
+import com.srikanth.sharkfeed.service.ImageFeedService;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<FlickrPhotosFeed> {
+import java.util.ArrayList;
+import java.util.List;
 
-    private Button dummyButton;
+public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView photoRecyclerView;
+    private PhotoAdapter recyclerAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<Photo> photos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dummyButton = (Button) findViewById(R.id.dummyButton);
-        dummyButton.setOnClickListener(this);
+        photoRecyclerView = (RecyclerView) findViewById(R.id.photo_recycler);
+        recyclerAdapter = new PhotoAdapter(photos, this);
+        mLayoutManager = new GridLayoutManager(this, 3);
+        photoRecyclerView.setAdapter(recyclerAdapter);
+        photoRecyclerView.setLayoutManager(mLayoutManager);
+        fetchData();
     }
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(MainActivity.this, "Rustic shit", Toast.LENGTH_LONG).show();
-        getLoaderManager().initLoader(LoaderId.LOAD_IMAGE_FEED, null, this).forceLoad();
+    private void fetchData() {
+        Intent intent = new Intent(this, ImageFeedService.class);
+        startService(intent);
     }
 
-    @Override
-    public Loader<FlickrPhotosFeed> onCreateLoader(int id, Bundle args) {
-        Log.v("Testing", "creating image loader");
-        return new ImageFeedLoader(this);
-    }
-
-    @Override
+  /*  @Override
     public void onLoadFinished(Loader<FlickrPhotosFeed> loader, FlickrPhotosFeed data) {
-
+        if (data != null) {
+            photos = data.getPhotos().getPhoto();
+            recyclerAdapter.setData(photos);
+            Log.v("Testing", "The data has been set");
+            recyclerAdapter.notifyDataSetChanged();
+        } else {
+            Log.v("Testing", "data is null");
+        }
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-
+        Log.v("Testing", "Loader reloaded");
     }
+    */
 }

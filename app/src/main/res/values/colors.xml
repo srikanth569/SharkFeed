@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <color name="white">#ffffff</color>
+    <color name="gray">#cdcdcd</color>
+    <color name="gray_2">#858484</color>
+    <color name="gray_3">#767779</color>
+    <color name="light_gray">#ededed</color>
+    <color name="light_gray_alt">#dddddd</color>
+    <color name="light_gray_alt2">#bbbbbb</color>
+    <color name="light_gray_alt3">#cfcfcf</color>
+    <color name="transparent_dark_gray_1">#55696969</color>
+    <color name="transparent_dark_gray_2">#bb0b0b0b</color>
+    <color name="transparent_dark_gray_3">#550b0b0b</color>
+    <color name="dark_gray_1">#696969</color>
+    <color name="dark_gray_2">#555555</color>
+    <color name="dark_gray_3">#444444</color>
+    <color name="very_dark_gray_1">#282828</color>
+    <color name="very_dark_gray_2">#111</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#ffff00</color>
+    <color name="red">#FF0000</color>
+    <color name="red_dark">#AA0000</color>
+    <color name="gray_drop_shadow">#b9b9b9</color>
+    <color name="loading_bg_color">#aad4d4d5</color>
+    <color name="blue">#00A4E4</color>
+</resources>

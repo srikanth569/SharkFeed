@@ -19,7 +19,7 @@ public class FlickrPhotosFeed {
         Log.v("Testing","The response is "+response);
         Gson gson = new GsonBuilder().create();
         FlickrPhotosFeed photosFeed = gson.fromJson(response, FlickrPhotosFeed.class);
-        Log.v("Testing","The stat is "+photosFeed.getPhotos().getPages());
+        Log.v("Testing","The stat is "+photosFeed.getPhotos().getPhoto().get(0).getUrlL());
         return photosFeed;
     }
 

@@ -8,21 +8,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class Photo {
 
+    private final static String ID ="id";
+    private final static String OWNER="owner";
+    private final static String SECRET = "secret";
+    private final static String SERVER = "server";
+    private final static String FARM = "farm";
+    private final static String TITLE = "title";
     private String id;
     private String owner;
     private String secret;
     private String server;
     private Integer farm;
     private String title;
-    private Integer ispublic;
-    private Integer isfriend;
-    private Integer isfamily;
-    @SerializedName("url_t")
-    private String urlT;
-    @SerializedName("height_t")
-    private String heightT;
-    @SerializedName("width_t")
-    private String widthT;
     @SerializedName("url_c")
     private String urlC;
     @SerializedName("height_c")
@@ -41,6 +38,12 @@ public class Photo {
     private String heightO;
     @SerializedName("width_o")
     private String widthO;
+    @SerializedName("url_sq")
+    private String urlSq;
+    @SerializedName("height_sq")
+    private String heightSq;
+    @SerializedName("width_sq")
+    private String widthSq;
 
     /**
      * @return The id
@@ -124,90 +127,6 @@ public class Photo {
      */
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     * @return The ispublic
-     */
-    public Integer getIspublic() {
-        return ispublic;
-    }
-
-    /**
-     * @param ispublic The ispublic
-     */
-    public void setIspublic(Integer ispublic) {
-        this.ispublic = ispublic;
-    }
-
-    /**
-     * @return The isfriend
-     */
-    public Integer getIsfriend() {
-        return isfriend;
-    }
-
-    /**
-     * @param isfriend The isfriend
-     */
-    public void setIsfriend(Integer isfriend) {
-        this.isfriend = isfriend;
-    }
-
-    /**
-     * @return The isfamily
-     */
-    public Integer getIsfamily() {
-        return isfamily;
-    }
-
-    /**
-     * @param isfamily The isfamily
-     */
-    public void setIsfamily(Integer isfamily) {
-        this.isfamily = isfamily;
-    }
-
-    /**
-     * @return The urlT
-     */
-    public String getUrlT() {
-        return urlT;
-    }
-
-    /**
-     * @param urlT The url_t
-     */
-    public void setUrlT(String urlT) {
-        this.urlT = urlT;
-    }
-
-    /**
-     * @return The heightT
-     */
-    public String getHeightT() {
-        return heightT;
-    }
-
-    /**
-     * @param heightT The height_t
-     */
-    public void setHeightT(String heightT) {
-        this.heightT = heightT;
-    }
-
-    /**
-     * @return The widthT
-     */
-    public String getWidthT() {
-        return widthT;
-    }
-
-    /**
-     * @param widthT The width_t
-     */
-    public void setWidthT(String widthT) {
-        this.widthT = widthT;
     }
 
     /**
@@ -336,4 +255,27 @@ public class Photo {
         this.widthO = widthO;
     }
 
+    public String getWidthSq() {
+        return widthSq;
+    }
+
+    public void setWidthSq(String widthSq) {
+        this.widthSq = widthSq;
+    }
+
+    public String getHeightSq() {
+        return heightSq;
+    }
+
+    public void setHeightSq(String heightSq) {
+        this.heightSq = heightSq;
+    }
+
+    public String getUrlSq() {
+        return urlSq;
+    }
+
+    public void setUrlSq(String urlSq) {
+        this.urlSq = urlSq;
+    }
 }
