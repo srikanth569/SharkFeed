@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null) {
             Log.v("Testing", " This is " + data.getCount());
+            recyclerAdapter.setData(data);
         } else {
             Log.v("Testing", "Data is null");
         }

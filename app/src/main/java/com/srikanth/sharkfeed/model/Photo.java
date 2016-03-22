@@ -66,7 +66,7 @@ public class Photo implements BaseColumns {
         return values;
     }
 
-    public void inflateFromCursor(Cursor cr) {
+    public Photo inflateFromCursor(Cursor cr) {
         id = cr.getString(cr.getColumnIndex(ID));
         owner = cr.getString(cr.getColumnIndex(OWNER));
         secret = cr.getString(cr.getColumnIndex(SECRET));
@@ -76,6 +76,7 @@ public class Photo implements BaseColumns {
         urlL = cr.getString(cr.getColumnIndex(URLL));
         urlO = cr.getString(cr.getColumnIndex(URLO));
         urlSq = cr.getString(cr.getColumnIndex(URLSQ));
+        return this;
     }
 
     /**

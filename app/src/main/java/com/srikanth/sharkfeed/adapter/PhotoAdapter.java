@@ -1,6 +1,7 @@
 package com.srikanth.sharkfeed.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,19 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     public void setData(List<Photo> _photos) {
         photos = _photos;
+        notifyDataSetChanged();
+    }
+
+    public void setData(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+        photos.clear();
+        while (cursor.moveToNext()) {
+            Photo photo = new Photo().inflateFromCursor(cursor);
+            photos.add(photo);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
