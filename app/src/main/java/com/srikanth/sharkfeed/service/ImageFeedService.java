@@ -1,6 +1,7 @@
 package com.srikanth.sharkfeed.service;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +45,7 @@ public class ImageFeedService extends IntentService {
 
     // By default we want to get the first page, unless otherwise specified
     private int page_number = 1;
+    private final int per_page = 99;
     // The default search term for this app is Shark,
     // but leaving it configurable in case we want to change it
     private String tagTerm = "shark";
@@ -54,12 +56,10 @@ public class ImageFeedService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.v("Testing", "came to load in background");
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             page_number = bundle.getInt(EXTRA_PAGE_NUMBER);
             page_number = page_number == 0 ? 1 : page_number;
-            Log.v("Testing", "The page number is " + page_number);
         }
 
         OkHttpClient client = new OkHttpClient();
@@ -73,16 +73,19 @@ public class ImageFeedService extends IntentService {
             response = call.execute();
             Log.v("Testing", "response recived");
             photosFeed = FlickrPhotosFeed.parseJson(response.body().string());
-            for (Photo photo : photosFeed.getPhotos().getPhoto()) {
-                try {
-                    getContentResolver().insert(
-                            SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),
-                            photo.getContentValues()
-                    );
-                } catch (Exception e) {
-                    Log.v("Testing", "DB Exception ");
-                    e.printStackTrace();
-                }
+            ContentValues[] values = new ContentValues[per_page];
+            for (int i = 0; i < per_page
+                    ; i++) {
+                Photo photo = photosFeed.getPhotos().getPhoto().get(i);
+                values[i] = photo.getContentValues();
+            }
+            try {
+                getContentResolver().bulkInsert(
+                        SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),
+                        values);
+            } catch (Exception e) {
+                Log.v("Testing", "DB Exception ");
+                e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();

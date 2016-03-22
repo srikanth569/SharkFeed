@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -21,7 +22,7 @@ public class SharkFeedContentProvider extends ContentProvider {
     private SQLiteOpenHelper mDatabaseHelper = null;
 
     private static final String AUTHORITY = "com.srikanth.sharkfeed.data.SharkFeedContentProvider";
-    public static final String SCHEME = "content";
+    private static final String SCHEME = "content";
 
     // Table ids
     private static final int PHOTO_ID = 0;
@@ -51,7 +52,7 @@ public class SharkFeedContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         if (db == null) {
             return null;
@@ -61,8 +62,11 @@ public class SharkFeedContentProvider extends ContentProvider {
         try {
             cursor = db.query(tableName, projection, selection, selectionArgs,
                     null, null, sortOrder, null);
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
-            Log.v("Testing", "Setting notifcation for URI " + uri.toString());
+            Context context = getContext();
+            if (context != null) {
+                cursor.setNotificationUri(context.getContentResolver(), uri);
+            }
+            Log.v("Testing", "Setting notification for URI " + uri.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +75,7 @@ public class SharkFeedContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final String type;
         switch (sUriMatcher.match(uri)) {
             case PHOTO_ID:
@@ -85,7 +89,7 @@ public class SharkFeedContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         Log.v("Testing", "Call to insert into a db");
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         if (db == null) {
@@ -108,7 +112,35 @@ public class SharkFeedContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        if (db == null) {
+            return -1;
+        }
+        int number_of_items_inserted = 0;
+        long rowId = 0;
+        String tableName = getTableName(uri);
+        for (ContentValues value : values) {
+            try {
+                rowId = db.insert(tableName, null, value);
+                if (rowId != -1) {
+                    number_of_items_inserted += 1;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (number_of_items_inserted > 0) {
+            Context context = getContext();
+            if (context != null) {
+                context.getContentResolver().notifyChange(uri, null);
+            }
+        }
+        return number_of_items_inserted;
+    }
+
+    @Override
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         if (db == null) {
             return 0;
@@ -123,13 +155,13 @@ public class SharkFeedContentProvider extends ContentProvider {
         Context context = getContext();
         if (context != null && count >= 1) {
             context.getContentResolver().notifyChange(uri, null);
-            Log.v("Testing", "Deleting items " + count+" notifying uri "+uri);
+            Log.v("Testing", "Deleting items " + count + " notifying uri " + uri);
         }
         return count;
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 
