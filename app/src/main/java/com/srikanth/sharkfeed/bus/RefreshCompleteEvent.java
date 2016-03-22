@@ -6,6 +6,6 @@ package com.srikanth.sharkfeed.bus;
 public class RefreshCompleteEvent {
 
     public RefreshCompleteEvent() {
-
+        // Left empty
     }
 }

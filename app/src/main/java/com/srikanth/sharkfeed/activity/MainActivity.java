@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import com.facebook.stetho.Stetho;
 import com.srikanth.sharkfeed.R;
+import com.srikanth.sharkfeed.adapter.EndlessScrollListener;
 import com.srikanth.sharkfeed.adapter.PhotoAdapter;
 import com.srikanth.sharkfeed.bus.RefreshCompleteEvent;
 import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
@@ -32,9 +33,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
     private List<Photo> photos = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EventBus bus = EventBus.getDefault();
+    private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
+    private int nextPageToLoad = 1;
+    private int refersh_first_page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
+        photoRecyclerView.addOnScrollListener(endlessScrollListener);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // We don't want to make a network call for data each time the user rotates the device
         // We just want to load the data from the DB to our UI
         if (savedInstanceState == null) {
-            fetchDataFromNetwork();
+            fetchDataFromNetwork(refersh_first_page);
         }
         populateUI();
         Stetho.initialize(
@@ -86,8 +92,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getLoaderManager().initLoader(100, null, this).forceLoad();
     }
 
-    private void fetchDataFromNetwork() {
+    private void fetchDataFromNetwork(int page_number) {
         Intent intent = new Intent(this, ImageFeedService.class);
+        intent.putExtra(EXTRA_PAGE_NUMBER, page_number);
         startService(intent);
     }
 
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onRefresh() {
-        fetchDataFromNetwork();
+        fetchDataFromNetwork(refersh_first_page);
         Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
     }
 
@@ -134,4 +141,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onEvent(RefreshCompleteEvent event) {
         onItemsLoadComplete();
     }
+
+    private EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+        @Override
+        public void loadNextPage(int page) {
+
+        }
+    };
 }
