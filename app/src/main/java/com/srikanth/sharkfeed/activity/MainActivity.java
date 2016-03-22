@@ -39,26 +39,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
-        Button mButton = (Button)findViewById(R.id.dummy);
+        Button mButton = (Button) findViewById(R.id.dummy);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.this.getContentResolver().delete(SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),null,null);
+                MainActivity.this.getContentResolver().delete(SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME), null, null);
             }
         });
-        fetchData();
+        // We don't want to make a network call for data each time the user rotates the device
+        // We just want to load the data from the DB to our UI
+        if (savedInstanceState == null) {
+            fetchDataFromNetwork();
+        }
+        populateUI();
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
-
     }
 
-    private void fetchData() {
+    private void populateUI() {
+        getLoaderManager().initLoader(100, null, this).forceLoad();
+    }
+
+    private void fetchDataFromNetwork() {
         Intent intent = new Intent(this, ImageFeedService.class);
         startService(intent);
-        getLoaderManager().initLoader(1, null, this).forceLoad();
     }
 
     @Override
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
         Log.v("Testing", "Loader reset");
     }
 }
