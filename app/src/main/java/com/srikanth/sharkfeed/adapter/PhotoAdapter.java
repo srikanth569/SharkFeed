@@ -63,6 +63,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return photos.size();
     }
 
+    public void clearData() {
+        if (photos != null) {
+            photos.clear();
+        }
+    }
+
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
 

@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        recyclerAdapter.clearData();
         Log.v("Testing", "Loader reset");
     }
 
