@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager = null;
 
     private List<Photo> photos = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -50,7 +50,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
-        photoRecyclerView.addOnScrollListener(endlessScrollListener);
+        photoRecyclerView.addOnScrollListener(new EndlessScrollListener(mLayoutManager) {
+            @Override
+            public void loadNextPage(int page) {
+                fetchDataFromNetwork(page);
+            }
+        });
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -142,10 +147,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         onItemsLoadComplete();
     }
 
-    private EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-        @Override
-        public void loadNextPage(int page) {
-
-        }
-    };
 }
