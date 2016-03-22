@@ -23,6 +23,11 @@
             android:name=".service.ImageFeedService"
             android:exported="false" />
 
+        <provider
+            android:name="com.srikanth.sharkfeed.data.SharkFeedContentProvider"
+            android:authorities="com.srikanth.sharkfeed.data.SharkFeedContentProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

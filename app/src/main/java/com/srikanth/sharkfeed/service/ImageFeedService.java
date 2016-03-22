@@ -4,7 +4,9 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
 import com.srikanth.sharkfeed.model.FlickrPhotosFeed;
+import com.srikanth.sharkfeed.model.Photo;
 
 import java.io.IOException;
 
@@ -39,6 +41,17 @@ public class ImageFeedService extends IntentService {
             response = call.execute();
             Log.v("Testing", "response recived");
             photosFeed = FlickrPhotosFeed.parseJson(response.body().string());
+            for (Photo photo : photosFeed.getPhotos().getPhoto()) {
+                try {
+                    getContentResolver().insert(
+                            SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),
+                            photo.getContentValues()
+                    );
+                } catch (Exception e) {
+                    Log.v("Testing", "DB Exception ");
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.v("Testing", "IO exception");
