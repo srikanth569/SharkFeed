@@ -2,14 +2,18 @@ package com.srikanth.sharkfeed.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import com.srikanth.sharkfeed.bus.RefreshCompleteEvent;
 import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
 import com.srikanth.sharkfeed.model.FlickrPhotosFeed;
 import com.srikanth.sharkfeed.model.Photo;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -56,5 +60,13 @@ public class ImageFeedService extends IntentService {
             e.printStackTrace();
             Log.v("Testing", "IO exception");
         }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                EventBus.getDefault().post(new RefreshCompleteEvent());
+            }
+        });
+
     }
 }

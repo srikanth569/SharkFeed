@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import com.facebook.stetho.Stetho;
 import com.srikanth.sharkfeed.R;
 import com.srikanth.sharkfeed.adapter.PhotoAdapter;
+import com.srikanth.sharkfeed.bus.RefreshCompleteEvent;
 import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
 import com.srikanth.sharkfeed.model.Photo;
 import com.srikanth.sharkfeed.service.ImageFeedService;
@@ -23,12 +25,16 @@ import com.srikanth.sharkfeed.service.ImageFeedService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import de.greenrobot.event.EventBus;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Photo> photos = new ArrayList<>();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private EventBus bus = EventBus.getDefault();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+        }
         Button mButton = (Button) findViewById(R.id.dummy);
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +68,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bus.unregister(this);
     }
 
     private void populateUI() {
@@ -93,5 +116,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
 
         Log.v("Testing", "Loader reset");
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchDataFromNetwork();
+        Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
+    }
+
+    void onItemsLoadComplete() {
+        if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
+        }
+    }
+
+    public void onEvent(RefreshCompleteEvent event) {
+        onItemsLoadComplete();
     }
 }
