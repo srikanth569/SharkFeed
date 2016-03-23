@@ -3,8 +3,10 @@ package com.srikanth.sharkfeed.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -49,7 +51,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.photo_row, parent, false);
-        return new PhotoViewHolder(v);
+        return new PhotoViewHolder(v, new PhotoViewHolder.HolderClickListener() {
+            @Override
+            public void onHolderClick(int position) {
+                Log.v("Testing", "holy crap i clicked on " + position);
+            }
+        });
     }
 
     @Override
@@ -57,10 +64,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         Picasso.with(context).load(photos.get(position).getUrlC()).placeholder(R.mipmap.ic_launcher).into(holder.image);
     }
 
-
     @Override
     public int getItemCount() {
         return photos.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return Long.valueOf(photos.get(position).getId());
     }
 
     public void clearData() {
@@ -70,13 +81,31 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     }
 
 
-    class PhotoViewHolder extends RecyclerView.ViewHolder {
+    static class PhotoViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
         public ImageView image;
+        public HolderClickListener listener;
 
-        public PhotoViewHolder(View itemView) {
+        public PhotoViewHolder(View itemView, HolderClickListener _listener) {
             super(itemView);
+            listener = _listener;
             image = (ImageView) itemView.findViewById(R.id.image_individual);
+            image.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            if (v instanceof ImageView) {
+                if (listener != null) {
+                    Log.v("Testing", "Clicked on " + getAdapterPosition());
+                    listener.onHolderClick(getAdapterPosition());
+                }
+            }
+        }
+
+        public interface HolderClickListener {
+            void onHolderClick(int position);
+        }
+
     }
 }

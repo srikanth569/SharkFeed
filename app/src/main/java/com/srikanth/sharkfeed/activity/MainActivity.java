@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
     private GridLayoutManager mLayoutManager = null;
-
     private List<Photo> photos = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EventBus bus = EventBus.getDefault();
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         photoRecyclerView = (RecyclerView) findViewById(R.id.photo_recycler);
         recyclerAdapter = new PhotoAdapter(photos, this);
+        recyclerAdapter.setHasStableIds(true);
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onRefresh() {
         fetchDataFromNetwork(refersh_first_page);
-        Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
+        Log.v("Testing", "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
     }
 
     void onItemsLoadComplete() {
@@ -148,5 +148,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onEvent(RefreshCompleteEvent event) {
         onItemsLoadComplete();
     }
-
 }
