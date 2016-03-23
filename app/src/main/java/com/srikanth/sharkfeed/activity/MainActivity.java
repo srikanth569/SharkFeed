@@ -50,10 +50,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
-        photoRecyclerView.addOnScrollListener(new EndlessScrollListener(mLayoutManager) {
+        photoRecyclerView.addOnScrollListener(new EndlessScrollListener() {
             @Override
             public void loadNextPage(int page) {
                 fetchDataFromNetwork(page);
+                Log.v("pageload", "Loading the page " + page);
             }
         });
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -126,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        recyclerAdapter.clearData();
+        // Todo loader reset needs to be handled properly
+        // recyclerAdapter.clearData();
         Log.v("Testing", "Loader reset");
     }
 

@@ -11,28 +11,37 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
     private GridLayoutManager mLayoutManager;
     private boolean loading = false;
+    private long previousTotal = 0;
+    private final static int minimum_threshold = 50;
+    private long visibleThreshold = minimum_threshold;
 
-    public EndlessScrollListener(GridLayoutManager layoutManager) {
-        mLayoutManager = layoutManager;
-        Log.v("Testing", "The span count is " + layoutManager.getSpanCount());
-    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        Log.v("Testing", "Scrolled " + dx + " " + dy + " the last visible item is " + mLayoutManager.findLastVisibleItemPosition() + " " + mLayoutManager.getItemCount());
-        if (mLayoutManager.findLastVisibleItemPosition() > 50 && !loading) {
-            loadNextPage(2);
+        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+        int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+        visibleThreshold = totalItemCount / 2;
+        visibleThreshold = visibleThreshold < minimum_threshold ? minimum_threshold : visibleThreshold;
+        if (totalItemCount < previousTotal) {
+            previousTotal = totalItemCount;
+            if (totalItemCount == 0) {
+                this.loading = true;
+            }
+        }
+
+        if (loading && (totalItemCount > previousTotal)) {
+            loading = false;
+            previousTotal = totalItemCount;
+        }
+        Log.v("Testing", "Checking loading " + loading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+            Log.v("Testing", "The next page is " + (totalItemCount % 99) + 1);
+            loadNextPage((totalItemCount / 99) + 1);
             loading = true;
         }
     }
-
-    @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        Log.v("Testing", "Scroll state changed " + newState);
-    }
-
 
     //The implementing activity will implement this method
     public abstract void loadNextPage(int page);
