@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EventBus bus = EventBus.getDefault();
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
-    private int nextPageToLoad = 1;
-    private int refersh_first_page = 1;
+    private int refresh_first_page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // We don't want to make a network call for data each time the user rotates the device
         // We just want to load the data from the DB to our UI
         if (savedInstanceState == null) {
-            fetchDataFromNetwork(refersh_first_page);
+            fetchDataFromNetwork(refresh_first_page);
         }
         populateUI();
         Stetho.initialize(
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onRefresh() {
-        fetchDataFromNetwork(refersh_first_page);
+        fetchDataFromNetwork(refresh_first_page);
         Log.v("Testing", "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
     }
 
