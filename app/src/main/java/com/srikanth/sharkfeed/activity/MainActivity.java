@@ -30,14 +30,19 @@ import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
+    // Views
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
     private GridLayoutManager mLayoutManager = null;
-    private List<Photo> photos = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private EventBus bus = EventBus.getDefault();
+
+    // Members
+    private final EventBus bus = EventBus.getDefault();
+    private final List<Photo> photos = new ArrayList<>();
+
+    // Constants
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
-    private int refresh_first_page = 1;
+    private final int refresh_first_page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,13 +142,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.v("Testing", "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
     }
 
-    void onItemsLoadComplete() {
+    private void onItemsLoadComplete() {
         if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
             Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
         }
     }
 
+    /**
+     * Receives callback to stop animation the pull to refresh view
+     *
+     * @param event
+     */
     public void onEvent(RefreshCompleteEvent event) {
         onItemsLoadComplete();
     }

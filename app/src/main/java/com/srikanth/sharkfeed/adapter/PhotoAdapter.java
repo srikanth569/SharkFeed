@@ -22,11 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by srikanth on 3/19/16.
+ * Handles RecyclerView loading and recycling of views
  */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
 
-    private Context context;
+    private static final String EXTRA_URL = "url";
+    private final Context context;
     private List<Photo> photos = new ArrayList<>();
 
     public PhotoAdapter(List<Photo> photoFeed, Context _context) {
@@ -60,7 +61,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             public void onHolderClick(int position) {
                 Bundle bundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_from_right, R.anim.slide_out_from_left).toBundle();
                 Intent intent = new Intent(context, FullScreenActivity.class);
-                intent.putExtra("url", photos.get(position).getUrlL());
+                intent.putExtra(EXTRA_URL, photos.get(position).getUrlL());
                 context.startActivity(intent, bundle);
             }
         });
@@ -91,8 +92,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     static class PhotoViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-        public ImageView image;
-        public HolderClickListener listener;
+        public final ImageView image;
+        public final HolderClickListener listener;
 
         public PhotoViewHolder(View itemView, HolderClickListener _listener) {
             super(itemView);

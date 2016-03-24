@@ -118,7 +118,7 @@ public class SharkFeedContentProvider extends ContentProvider {
             return -1;
         }
         int number_of_items_inserted = 0;
-        long rowId = 0;
+        long rowId ;
         String tableName = getTableName(uri);
         for (ContentValues value : values) {
             try {

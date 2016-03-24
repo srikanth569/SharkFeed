@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 /**
- * Created by srikanth on 3/21/16.
+ * Logic for EndlessScrolling
+ * Tries to fetch more data when the last visible item has scrolled past 75% of the capacity
  */
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
-    private GridLayoutManager mLayoutManager;
     private boolean loading = false;
     private long previousTotal = 0;
     private final static int minimum_threshold = 50;
@@ -19,7 +19,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+        GridLayoutManager mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
         int totalItemCount = recyclerView.getLayoutManager().getItemCount();
         visibleThreshold = totalItemCount - (totalItemCount / 4);

@@ -21,7 +21,7 @@ import com.srikanth.sharkfeed.util.PermissionUtil;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by srikanth on 3/22/16.
+ * Handles displaying the Image in full screen
  */
 public class FullScreenActivity extends Activity implements View.OnClickListener {
 

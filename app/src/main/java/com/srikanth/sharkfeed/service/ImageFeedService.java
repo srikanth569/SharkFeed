@@ -12,6 +12,7 @@ import com.srikanth.sharkfeed.bus.RefreshCompleteEvent;
 import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
 import com.srikanth.sharkfeed.model.FlickrPhotosFeed;
 import com.srikanth.sharkfeed.model.Photo;
+import com.srikanth.sharkfeed.util.APIUtils;
 
 import java.io.IOException;
 
@@ -22,32 +23,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by srikanth on 3/19/16.
+ * ImageFeedService : Handles the responsibility of retrieving json from the API
  */
 public class ImageFeedService extends IntentService {
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     */
-    private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
-    private final static String BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-    private final static String API_KEY = "api_key=949e98778755d1982f537d56236bbb42";
-    // Tags with which the images are tagged
-    private final static String TAG = "tags=";
-    private final static String FORMAT = "format=json&nojsoncallback=1";
-    private final static String PAGE = "page=";
-    // Using a 3 collum span, this makes sure the last row is fully filled
-    private final static String PER_PAGE = "per_page=99";
-    // This makes sure we get only images
-    private final static String CONTENT_TYPE = "content_type=1";
-    private final static String EXTRAS = "extras=url_c,url_l,url_o,url_sq";
-    private final static String SEPARATOR = "&";
 
-    // By default we want to get the first page, unless otherwise specified
-    private int page_number = 1;
-    private final int per_page = 99;
+    private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
     // The default search term for this app is Shark,
     // but leaving it configurable in case we want to change it
     private String tagTerm = "shark";
+    // By default we want to get the first page, unless otherwise specified
+    private int page_number = 1;
+    private final int per_page = 99;
 
     public ImageFeedService() {
         super(ImageFeedService.class.getSimpleName());
@@ -63,32 +49,32 @@ public class ImageFeedService extends IntentService {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(buildUrlToQuery())
+                .url(APIUtils.buildUrlToQuery(tagTerm, page_number))
                 .build();
         Call call = client.newCall(request);
-        Response response = null;
-        FlickrPhotosFeed photosFeed = null;
+        Response response;
+        FlickrPhotosFeed photosFeed;
         try {
             response = call.execute();
-            Log.v("Testing", "response recived");
+            Log.v("Testing", "response received");
             photosFeed = FlickrPhotosFeed.parseJson(response.body().string());
-            ContentValues[] values = new ContentValues[per_page];
-            for (int i = 0; i < per_page
-                    ; i++) {
-                Photo photo = photosFeed.getPhotos().getPhoto().get(i);
-                values[i] = photo.getContentValues();
-            }
-            try {
+            if (photosFeed != null) {
+                ContentValues[] values = new ContentValues[per_page];
+                for (int i = 0; i < per_page; i++) {
+                    Photo photo = photosFeed.getPhotos().getPhoto().get(i);
+                    values[i] = photo.getContentValues();
+                }
+                // Received json, write it to DB
                 getContentResolver().bulkInsert(
                         SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),
                         values);
-            } catch (Exception e) {
-                Log.v("Testing", "DB Exception ");
-                e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
             Log.v("Testing", "IO exception");
+        } catch (Exception e) {
+            Log.v("Testing", "DB Exception ");
+            e.printStackTrace();
         }
         notifyCompletion();
     }
@@ -101,28 +87,5 @@ public class ImageFeedService extends IntentService {
                 EventBus.getDefault().post(new RefreshCompleteEvent());
             }
         });
-    }
-
-
-    private String buildUrlToQuery() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(BASE_URL);
-        buffer.append(SEPARATOR);
-        buffer.append(API_KEY);
-        buffer.append(SEPARATOR);
-        buffer.append(TAG);
-        buffer.append(tagTerm);
-        buffer.append(SEPARATOR);
-        buffer.append(FORMAT);
-        buffer.append(SEPARATOR);
-        buffer.append(PAGE);
-        buffer.append(page_number);
-        buffer.append(SEPARATOR);
-        buffer.append(PER_PAGE);
-        buffer.append(SEPARATOR);
-        buffer.append(CONTENT_TYPE);
-        buffer.append(SEPARATOR);
-        buffer.append(EXTRAS);
-        return buffer.toString();
     }
 }
