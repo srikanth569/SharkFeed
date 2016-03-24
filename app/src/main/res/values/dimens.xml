@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="recycler_row_image_size">96dp</dimen>
+    <dimen name="full_screen_activity_button_margin">8dp</dimen>
 </resources>

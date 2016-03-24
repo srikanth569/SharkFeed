@@ -66,7 +66,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        Picasso.with(context).load(photos.get(position).getUrlC()).placeholder(R.mipmap.ic_launcher).into(holder.image);
+        Picasso.with(context).load(photos.get(position).getUrlC()).into(holder.image);
     }
 
     @Override
