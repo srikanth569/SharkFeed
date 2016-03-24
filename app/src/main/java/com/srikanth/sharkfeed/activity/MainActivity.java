@@ -59,14 +59,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(this);
         }
-        Button mButton = (Button) findViewById(R.id.dummy);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.getContentResolver().delete(SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME), null, null);
-            }
-        });
         // We don't want to make a network call for data each time the user rotates the device
         // We just want to load the data from the DB to our UI
         if (savedInstanceState == null) {
