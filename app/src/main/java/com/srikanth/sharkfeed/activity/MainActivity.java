@@ -20,6 +20,7 @@ import com.srikanth.sharkfeed.bus.RefreshCompleteEvent;
 import com.srikanth.sharkfeed.data.SharkFeedContentProvider;
 import com.srikanth.sharkfeed.model.Photo;
 import com.srikanth.sharkfeed.service.ImageFeedService;
+import com.srikanth.sharkfeed.util.StorageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,9 +146,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     EndlessScrollListener scrollListener = new EndlessScrollListener() {
         @Override
-        public void loadNextPage(int page) {
-            fetchDataFromNetwork(page);
-            Log.v(TAG, "Loading the page " + page);
+        public void loadNextPage(int page_number) {
+            int last_loaded = StorageUtils.readFromSharedPreferences(MainActivity.this);
+            if (last_loaded > -1) {
+                if (page_number == last_loaded) {
+                    page_number = page_number + 1;
+                }
+            }
+            fetchDataFromNetwork(page_number);
+            Log.v(TAG, "Loading the page " + page_number);
+            StorageUtils.WriteToSharedPrefrences(MainActivity.this,page_number);
         }
     };
 }
