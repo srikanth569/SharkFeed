@@ -22,7 +22,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
         int totalItemCount = recyclerView.getLayoutManager().getItemCount();
-        visibleThreshold = totalItemCount / 2;
+        visibleThreshold = totalItemCount - (totalItemCount / 4);
         visibleThreshold = visibleThreshold < minimum_threshold ? minimum_threshold : visibleThreshold;
         if (totalItemCount < previousTotal) {
             previousTotal = totalItemCount;
@@ -36,9 +36,9 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
             previousTotal = totalItemCount;
         }
         Log.v("Testing", "Checking loading " + loading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
-            Log.v("Testing", "The next page is " + (int) (Math.floor(totalItemCount / 99) + 1));
-            loadNextPage((int) (Math.floor(totalItemCount / 99) + 1));
+        if (!loading && (lastVisibleItemPosition > visibleThreshold)) {
+            int currentPage = Math.round((float) totalItemCount / 99);
+            loadNextPage(currentPage + 1);
             loading = true;
         }
     }
