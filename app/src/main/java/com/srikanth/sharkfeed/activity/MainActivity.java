@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private PhotoAdapter recyclerAdapter;
     private GridLayoutManager layoutManager = null;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     // Members
     private final EventBus bus = EventBus.getDefault();
     private final List<Photo> photos = new ArrayList<>();
@@ -44,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
     private static final String EXTRA_SEARCH_TAG = "extra_search_tag";
     private final int refresh_first_page = 1;
+
+    // Variables
+    private int page_number = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,16 +148,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     EndlessScrollListener scrollListener = new EndlessScrollListener() {
         @Override
-        public void loadNextPage(int page_number) {
+        public void loadNextPage() {
             int last_loaded = StorageUtils.readFromSharedPreferences(MainActivity.this);
+            Log.v("Testing", "Last page loaded " + last_loaded);
             if (last_loaded > -1) {
-                if (page_number == last_loaded) {
-                    page_number = page_number + 1;
-                }
+                page_number = last_loaded + 1;
             }
             fetchDataFromNetwork(page_number);
             Log.v(TAG, "Loading the page " + page_number);
-            StorageUtils.WriteToSharedPrefrences(MainActivity.this,page_number);
+            StorageUtils.WriteToSharedPrefrences(MainActivity.this, page_number);
         }
     };
 }

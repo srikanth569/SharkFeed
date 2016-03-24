@@ -10,5 +10,6 @@ Assumptions made
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
  
 1 . The app is always connected to network.
-2 . Using only images that have urls for medium, large and original. 
+2 . Using only images that have urls for medium, large and original.
+3 . No rate limiting logic in place. 
 

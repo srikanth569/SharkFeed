@@ -22,22 +22,22 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         GridLayoutManager mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
         int totalItemCount = recyclerView.getLayoutManager().getItemCount();
-        visibleThreshold = totalItemCount - (totalItemCount / 4);
+        visibleThreshold = totalItemCount/2;
         visibleThreshold = visibleThreshold < minimum_threshold ? minimum_threshold : visibleThreshold;
+
         if (totalItemCount == 0) {
             this.isLoading = true;
         }
 
         Log.v(TAG, "Checking loading " + isLoading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
         if (!isLoading && (lastVisibleItemPosition > visibleThreshold)) {
-            int currentPage = Math.round((float) totalItemCount / 99);
-            loadNextPage(currentPage + 1);
+            loadNextPage();
             isLoading = true;
         }
     }
 
     //The implementing activity will implement this method
-    public abstract void loadNextPage(int page);
+    public abstract void loadNextPage();
 
     public void setLoading(boolean _isLoading) {
         isLoading = _isLoading;

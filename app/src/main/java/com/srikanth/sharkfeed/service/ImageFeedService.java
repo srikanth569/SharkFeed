@@ -69,7 +69,7 @@ public class ImageFeedService extends IntentService {
             Log.v(TAG, "response received from API");
             if (photosFeed != null) {
                 List<ContentValues> contentValues = new ArrayList<>();
-                for (int i = 0; i < per_page; i++) {
+                for (int i = 0; i < photosFeed.getPhotos().getPhoto().size(); i++) {
                     Photo photo = photosFeed.getPhotos().getPhoto().get(i);
                     if (photo.getUrlC() != null && photo.getUrlL() != null) {
                         contentValues.add(photo.getContentValues());
