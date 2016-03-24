@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.facebook.stetho.server.http.HttpStatus;
+import com.srikanth.sharkfeed.R;
 import com.srikanth.sharkfeed.bus.DownloadComplete;
 import com.srikanth.sharkfeed.util.StorageUtils;
 
@@ -27,7 +28,8 @@ import de.greenrobot.event.EventBus;
  */
 public class DownloadImageService extends IntentService {
 
-    private static final String EXTRA_URL = "url";
+    private static final String EXTRA_URL = "extra_url";
+    private static final String EXTRA_Title = "extra_title";
     private static final String TAG = DownloadImageService.class.getSimpleName();
     private boolean downloadResult = false;
 
@@ -51,7 +53,8 @@ public class DownloadImageService extends IntentService {
             }
             Bitmap bitmap = downloadBitmap(url);
             if (bitmap != null) {
-                MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Test", "Testing");
+                String title = bundle.getString(EXTRA_Title);
+                MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, title == null ? getString(R.string.untitled) : title, getString(R.string.downloaded_from_flickr));
             } else {
                 downloadResult = false;
             }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,7 +62,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             public void onHolderClick(int position) {
                 Bundle bundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_from_right, R.anim.slide_out_from_left).toBundle();
                 Intent intent = new Intent(context, FullScreenImageDisplayActivity.class);
-                Log.v("Testing","photos.get(position).getUrlL() "+photos.get(position).getUrlL());
                 intent.putExtra(EXTRA_URL, photos.get(position).getUrlL());
                 intent.putExtra(EXTRA_TITLE, photos.get(position).getTitle());
                 context.startActivity(intent, bundle);

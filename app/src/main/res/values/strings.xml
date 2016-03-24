@@ -5,4 +5,6 @@
     <string name="download">download</string>
     <string name="image_download_successful">Successfully downloaded the image</string>
     <string name="image_download_failed">Downloaded failed</string>
+    <string name="untitled">untitled</string>
+    <string name="downloaded_from_flickr">downloaded from flickr</string>
 </resources>

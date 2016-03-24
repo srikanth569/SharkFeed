@@ -112,6 +112,7 @@ public class FullScreenImageDisplayActivity extends Activity implements View.OnC
     private void saveImageToDisk() {
         Intent intent = new Intent(this, DownloadImageService.class);
         intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_TITLE,titleString);
         startService(intent);
     }
 
