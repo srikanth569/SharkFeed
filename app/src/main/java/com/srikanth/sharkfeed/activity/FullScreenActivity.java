@@ -61,6 +61,12 @@ public class FullScreenActivity extends Activity implements View.OnClickListener
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_right);
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.open_in_flickr) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
