@@ -15,6 +15,8 @@ import com.srikanth.sharkfeed.model.Photo;
 import com.srikanth.sharkfeed.util.APIUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
@@ -34,6 +36,7 @@ public class ImageFeedService extends IntentService {
     // By default we want to get the first page, unless otherwise specified
     private int page_number = 1;
     private final int per_page = 99;
+    private int previously_loaded_page = 0;
 
     public ImageFeedService() {
         super(ImageFeedService.class.getSimpleName());
@@ -45,6 +48,7 @@ public class ImageFeedService extends IntentService {
         if (bundle != null) {
             page_number = bundle.getInt(EXTRA_PAGE_NUMBER);
             page_number = page_number == 0 ? 1 : page_number;
+            page_number = page_number == previously_loaded_page ? page_number + 1 : page_number;
         }
 
         OkHttpClient client = new OkHttpClient();
@@ -59,15 +63,18 @@ public class ImageFeedService extends IntentService {
             Log.v("Testing", "response received");
             photosFeed = FlickrPhotosFeed.parseJson(response.body().string());
             if (photosFeed != null) {
-                ContentValues[] values = new ContentValues[per_page];
+                List<ContentValues> contentValues = new ArrayList<>();
                 for (int i = 0; i < per_page; i++) {
                     Photo photo = photosFeed.getPhotos().getPhoto().get(i);
-                    values[i] = photo.getContentValues();
+                    if (photo.getUrlC() != null && photo.getUrlL() != null) {
+                        contentValues.add(photo.getContentValues());
+                    }
                 }
+
+                ContentValues[] values = contentValues.toArray(new ContentValues[contentValues.size()]);
                 // Received json, write it to DB
                 getContentResolver().bulkInsert(
-                        SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME),
-                        values);
+                        SharkFeedContentProvider.getTableUri(Photo.TABLE_NAME), values);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,6 +83,7 @@ public class ImageFeedService extends IntentService {
             Log.v("Testing", "DB Exception ");
             e.printStackTrace();
         }
+        previously_loaded_page = page_number;
         notifyCompletion();
     }
 

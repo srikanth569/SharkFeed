@@ -8,6 +8,7 @@ public class APIUtils {
     private final static String API_KEY = "api_key=949e98778755d1982f537d56236bbb42";
     // Tags with which the images are tagged
     private final static String TAG = "tags=";
+    private final static String TEXT = "text=";
     private final static String FORMAT = "format=json&nojsoncallback=1";
     private final static String PAGE = "page=";
     // Using a 3 collum span, this makes sure the last row is fully filled
@@ -24,6 +25,9 @@ public class APIUtils {
         buffer.append(API_KEY);
         buffer.append(SEPARATOR);
         buffer.append(TAG);
+        buffer.append(tagTerm);
+        buffer.append(SEPARATOR);
+        buffer.append(TEXT);
         buffer.append(tagTerm);
         buffer.append(SEPARATOR);
         buffer.append(FORMAT);

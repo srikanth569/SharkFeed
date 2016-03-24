@@ -40,9 +40,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         notifyDataSetChanged();
     }
 
-    public void setData(Cursor cursor) {
+    public Cursor setData(Cursor cursor) {
         if (cursor == null) {
-            return;
+            return null;
         }
         photos.clear();
         while (cursor.moveToNext()) {
@@ -50,6 +50,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             photos.add(photo);
         }
         notifyDataSetChanged();
+        return cursor;
     }
 
     @Override

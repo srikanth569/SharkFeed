@@ -54,13 +54,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mLayoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
         photoRecyclerView.setLayoutManager(mLayoutManager);
-        photoRecyclerView.addOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void loadNextPage(int page) {
-                fetchDataFromNetwork(page);
-                Log.v("pageload", "Loading the page " + page);
-            }
-        });
+        photoRecyclerView.addOnScrollListener(scrollListener);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -133,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
         // Todo loader reset needs to be handled properly
         // recyclerAdapter.clearData();
-        Log.v("Testing", "Loader reset");
     }
 
     @Override
@@ -156,5 +149,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     public void onEvent(RefreshCompleteEvent event) {
         onItemsLoadComplete();
+        if (scrollListener != null) {
+            scrollListener.setLoading(false);
+        }
     }
+
+    EndlessScrollListener scrollListener = new EndlessScrollListener() {
+        @Override
+        public void loadNextPage(int page) {
+            fetchDataFromNetwork(page);
+            Log.v("pageload", "Loading the page " + page);
+        }
+    };
 }
