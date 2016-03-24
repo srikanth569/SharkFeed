@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,7 @@ public class FullScreenActivity extends Activity implements View.OnClickListener
     private String url;
     private static final String[] GALLERY_PERMISSION_STRING = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int GALLERY_PERMISSION_RESULT_CODE = 100;
-    private EventBus eventBus = EventBus.getDefault();
+    private final EventBus eventBus = EventBus.getDefault();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class FullScreenActivity extends Activity implements View.OnClickListener
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         boolean areAllPermissionsGranted = PermissionUtil.verifyPermissions(grantResults);
         if (areAllPermissionsGranted) {
             saveImageToDisk();
