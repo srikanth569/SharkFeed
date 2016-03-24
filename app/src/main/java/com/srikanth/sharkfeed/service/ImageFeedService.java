@@ -54,6 +54,8 @@ public class ImageFeedService extends IntentService {
             tagTerm = bundle.getString(EXTRA_SEARCH_TAG);
         }
 
+        String urlToCall = APIUtils.buildUrlToQuery(tagTerm, page_number);
+        Log.v(TAG, "The URL to be called is "+urlToCall);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(APIUtils.buildUrlToQuery(tagTerm, page_number))

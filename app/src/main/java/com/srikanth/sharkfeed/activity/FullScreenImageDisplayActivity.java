@@ -23,7 +23,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Handles displaying the Image in full screen
  */
-public class FullScreenActivity extends Activity implements View.OnClickListener {
+public class FullScreenImageDisplayActivity extends Activity implements View.OnClickListener {
 
     private static final String EXTRA_URL = "url";
     private ImageView imageView;
@@ -108,9 +108,9 @@ public class FullScreenActivity extends Activity implements View.OnClickListener
     public void onEvent(DownloadComplete downloadComplete) {
 
         if (downloadComplete.isSuccess()) {
-            Toast.makeText(this, "Successfully downloaded the image", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.image_download_successful, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Downloaded failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.image_download_failed, Toast.LENGTH_LONG).show();
         }
 
     }

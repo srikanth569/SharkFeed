@@ -10,6 +10,7 @@ public class APIUtils {
     private final static String TAG = "tags=";
     private final static String FORMAT = "format=json&nojsoncallback=1";
     private final static String PAGE = "page=";
+    private final static String SORT = "sort=relevance";
     // Using a 3 collum span, this makes sure the last row is fully filled
     private final static String PER_PAGE = "per_page=99";
     // This makes sure we get only images
@@ -30,6 +31,8 @@ public class APIUtils {
         buffer.append(SEPARATOR);
         buffer.append(PAGE);
         buffer.append(page_number);
+        buffer.append(SEPARATOR);
+        buffer.append(SORT);
         buffer.append(SEPARATOR);
         buffer.append(PER_PAGE);
         buffer.append(SEPARATOR);

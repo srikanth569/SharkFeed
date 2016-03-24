@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +14,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.srikanth.sharkfeed.R;
-import com.srikanth.sharkfeed.activity.FullScreenActivity;
+import com.srikanth.sharkfeed.activity.FullScreenImageDisplayActivity;
 import com.srikanth.sharkfeed.model.Photo;
 
 import java.util.ArrayList;
@@ -26,7 +25,8 @@ import java.util.List;
  */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
 
-    private static final String EXTRA_URL = "url";
+    private static final String EXTRA_URL = "extra_url";
+    private static final String EXTRA_TITLE = "extra_title";
     private final Context context;
     private List<Photo> photos = new ArrayList<>();
 
@@ -61,8 +61,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             @Override
             public void onHolderClick(int position) {
                 Bundle bundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_from_right, R.anim.slide_out_from_left).toBundle();
-                Intent intent = new Intent(context, FullScreenActivity.class);
+                Intent intent = new Intent(context, FullScreenImageDisplayActivity.class);
                 intent.putExtra(EXTRA_URL, photos.get(position).getUrlL());
+                intent.putExtra(EXTRA_TITLE, photos.get(position).getTitle());
                 context.startActivity(intent, bundle);
             }
         });
