@@ -11,7 +11,6 @@ import android.util.Log;
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
     private boolean isLoading = false;
-    private long previousTotal = 0;
     private final static int minimum_threshold = 50;
     private long visibleThreshold = minimum_threshold;
 

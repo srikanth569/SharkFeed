@@ -26,11 +26,9 @@ import de.greenrobot.event.EventBus;
  * Created by srikanth on 3/23/16.
  */
 public class DownloadImageService extends IntentService {
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     */
 
     private static final String EXTRA_URL = "url";
+    private static final String TAG = DownloadImageService.class.getSimpleName();
     private boolean downloadResult = false;
 
     public DownloadImageService() {
@@ -43,12 +41,12 @@ public class DownloadImageService extends IntentService {
         Bundle bundle = intent.getExtras();
         String url = bundle.getString(EXTRA_URL);
         if (url != null) {
-            Log.v("Testing", "The External memory is readable " + StorageUtils.isExternalStorageWritable());
+            Log.v(TAG, "The External memory is readable " + StorageUtils.isExternalStorageWritable());
             if (StorageUtils.isExternalStorageWritable()) {
                 File file = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES), "SharkFeed");
                 if (!file.mkdirs()) {
-                    Log.e("Testing", "Directory not created");
+                    Log.e(TAG, "Directory not created");
                 }
 
             }

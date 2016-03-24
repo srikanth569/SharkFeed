@@ -29,7 +29,9 @@ import okhttp3.Response;
  */
 public class ImageFeedService extends IntentService {
 
+    private final static String TAG = ImageFeedService.class.getSimpleName();
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
+    private static final String EXTRA_SEARCH_TAG = "extra_search_tag";
     // The default search term for this app is Shark,
     // but leaving it configurable in case we want to change it
     private String tagTerm = "shark";
@@ -49,6 +51,7 @@ public class ImageFeedService extends IntentService {
             page_number = bundle.getInt(EXTRA_PAGE_NUMBER);
             page_number = page_number == 0 ? 1 : page_number;
             page_number = page_number == previously_loaded_page ? page_number + 1 : page_number;
+            tagTerm = bundle.getString(EXTRA_SEARCH_TAG);
         }
 
         OkHttpClient client = new OkHttpClient();
@@ -60,8 +63,8 @@ public class ImageFeedService extends IntentService {
         FlickrPhotosFeed photosFeed;
         try {
             response = call.execute();
-            Log.v("Testing", "response received");
             photosFeed = FlickrPhotosFeed.parseJson(response.body().string());
+            Log.v(TAG, "response received from API");
             if (photosFeed != null) {
                 List<ContentValues> contentValues = new ArrayList<>();
                 for (int i = 0; i < per_page; i++) {
@@ -78,15 +81,20 @@ public class ImageFeedService extends IntentService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.v("Testing", "IO exception");
+            Log.v(TAG, "Caught IO exception while fetching photo feed");
         } catch (Exception e) {
-            Log.v("Testing", "DB Exception ");
+            Log.v(TAG, "Caught unexpected exception while fetching photo feed ");
             e.printStackTrace();
         }
         previously_loaded_page = page_number;
         notifyCompletion();
     }
 
+    /**
+     * Notifies the main activity that service has finished loading
+     * - This enables refresh layout loading to be terminated
+     * - Runs on the main thread
+     */
     private void notifyCompletion() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {

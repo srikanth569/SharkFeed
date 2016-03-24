@@ -11,8 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.facebook.stetho.Stetho;
 import com.srikanth.sharkfeed.R;
@@ -41,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final List<Photo> photos = new ArrayList<>();
 
     // Constants
+    private final static String TAG = MainActivity.class.getSimpleName();
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
+    private static final String EXTRA_SEARCH_TAG = "extra_search_tag";
     private final int refresh_first_page = 1;
 
     @Override
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void fetchDataFromNetwork(int page_number) {
         Intent intent = new Intent(this, ImageFeedService.class);
         intent.putExtra(EXTRA_PAGE_NUMBER, page_number);
+        intent.putExtra(EXTRA_SEARCH_TAG, "shark");
         startService(intent);
     }
 
@@ -108,10 +109,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null) {
-            Log.v("Testing", " This is " + data.getCount());
             recyclerAdapter.setData(data);
-        } else {
-            Log.v("Testing", "Data is null");
         }
     }
 
@@ -124,13 +122,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onRefresh() {
         fetchDataFromNetwork(refresh_first_page);
-        Log.v("Testing", "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
+        Log.v(TAG, "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
     }
 
     private void onItemsLoadComplete() {
         if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
-            Log.v("Testing", "onrefresh is being called " + mSwipeRefreshLayout.isRefreshing());
         }
     }
 
@@ -150,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         public void loadNextPage(int page) {
             fetchDataFromNetwork(page);
-            Log.v("pageload", "Loading the page " + page);
+            Log.v(TAG, "Loading the page " + page);
         }
     };
 }

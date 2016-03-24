@@ -1,7 +1,5 @@
 package com.srikanth.sharkfeed.model;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,20 +9,13 @@ import com.google.gson.GsonBuilder;
 
 public class FlickrPhotosFeed {
 
-    private Photos photos ;
+    private Photos photos;
     private String stat;
 
 
     public static FlickrPhotosFeed parseJson(String response) {
-        Log.v("Testing","The response is "+response);
         Gson gson = new GsonBuilder().create();
-        FlickrPhotosFeed photosFeed = gson.fromJson(response, FlickrPhotosFeed.class);
-        if (photosFeed == null) {
-            Log.v("Testing", "Photofeed is null ");
-        } else {
-            Log.v("Testing", "Photofeed is not null ");
-        }
-        return photosFeed;
+        return gson.fromJson(response, FlickrPhotosFeed.class);
     }
 
 
