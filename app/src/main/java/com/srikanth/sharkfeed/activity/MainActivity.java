@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // Views
     private RecyclerView photoRecyclerView;
     private PhotoAdapter recyclerAdapter;
-    private GridLayoutManager mLayoutManager = null;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private GridLayoutManager layoutManager = null;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     // Members
     private final EventBus bus = EventBus.getDefault();
@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         photoRecyclerView = (RecyclerView) findViewById(R.id.photo_recycler);
         recyclerAdapter = new PhotoAdapter(photos, this);
         recyclerAdapter.setHasStableIds(true);
-        mLayoutManager = new GridLayoutManager(this, 3);
+        layoutManager = new GridLayoutManager(this, 3);
         photoRecyclerView.setAdapter(recyclerAdapter);
-        photoRecyclerView.setLayoutManager(mLayoutManager);
+        photoRecyclerView.setLayoutManager(layoutManager);
         photoRecyclerView.addOnScrollListener(scrollListener);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(this);
         }
         // We don't want to make a network call for data each time the user rotates the device
         // We just want to load the data from the DB to our UI
@@ -122,12 +122,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onRefresh() {
         fetchDataFromNetwork(refresh_first_page);
-        Log.v(TAG, "onRefresh is being called " + mSwipeRefreshLayout.isRefreshing());
+        Log.v(TAG, "onRefresh is being called " + swipeRefreshLayout.isRefreshing());
     }
 
     private void onItemsLoadComplete() {
-        if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

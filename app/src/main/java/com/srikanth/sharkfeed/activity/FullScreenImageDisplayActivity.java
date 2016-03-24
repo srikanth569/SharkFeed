@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -25,19 +26,28 @@ import de.greenrobot.event.EventBus;
  */
 public class FullScreenImageDisplayActivity extends Activity implements View.OnClickListener {
 
-    private static final String EXTRA_URL = "url";
+    // constants
+    private static final String EXTRA_URL = "extra_url";
+    private static final String EXTRA_TITLE = "extra_title";
+    private static final String[] GALLERY_PERMISSION_STRING = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    private static final int GALLERY_PERMISSION_RESULT_CODE = 100;
+
+    // Variables
+    private String url;
+    private String titleString;
+    private final EventBus eventBus = EventBus.getDefault();
+
+    // Views
     private ImageView imageView;
     private Button downloadButton;
     private Button openInFlickr;
-    private String url;
-    private static final String[] GALLERY_PERMISSION_STRING = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-    private static final int GALLERY_PERMISSION_RESULT_CODE = 100;
-    private final EventBus eventBus = EventBus.getDefault();
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen);
+        title = (TextView) findViewById(R.id.title);
         imageView = (ImageView) findViewById(R.id.action_image);
         downloadButton = (Button) findViewById(R.id.download_image);
         openInFlickr = (Button) findViewById(R.id.open_in_flickr);
@@ -45,7 +55,15 @@ public class FullScreenImageDisplayActivity extends Activity implements View.OnC
         downloadButton.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         url = bundle.getString(EXTRA_URL);
+        titleString = bundle.getString(EXTRA_TITLE);
+        populateData();
+    }
+
+    private void populateData() {
         Picasso.with(this).load(url).into(imageView);
+        if (titleString != null) {
+            title.setText(titleString);
+        }
     }
 
     @Override
@@ -112,8 +130,6 @@ public class FullScreenImageDisplayActivity extends Activity implements View.OnC
         } else {
             Toast.makeText(this, R.string.image_download_failed, Toast.LENGTH_LONG).show();
         }
-
     }
-
 
 }
