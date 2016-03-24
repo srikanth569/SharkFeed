@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.srikanth.sharkfeed.model.Photo;
 
@@ -66,7 +65,6 @@ public class SharkFeedContentProvider extends ContentProvider {
             if (context != null) {
                 cursor.setNotificationUri(context.getContentResolver(), uri);
             }
-            Log.v("Testing", "Setting notification for URI " + uri.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +88,6 @@ public class SharkFeedContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        Log.v("Testing", "Call to insert into a db");
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         if (db == null) {
             return null;
@@ -155,7 +152,6 @@ public class SharkFeedContentProvider extends ContentProvider {
         Context context = getContext();
         if (context != null && count >= 1) {
             context.getContentResolver().notifyChange(uri, null);
-            Log.v("Testing", "Deleting items " + count + " notifying uri " + uri);
         }
         return count;
     }

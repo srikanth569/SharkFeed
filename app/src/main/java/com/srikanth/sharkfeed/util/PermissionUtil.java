@@ -11,6 +11,7 @@ import android.util.Log;
  */
 public class PermissionUtil {
 
+    private static final String TAG = PermissionUtil.class.getSimpleName();
 
     public static boolean verifyPermissions(int[] grantResults) {
         // At least one result must be checked.
@@ -33,7 +34,7 @@ public class PermissionUtil {
         }
         for (String perm : permissions) {
             if (ActivityCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED) {
-                Log.v("Testing", perm + " " + "not granted");
+                Log.v(TAG, perm + " " + "not granted");
                 return false;
             }
         }

@@ -10,6 +10,7 @@ import android.util.Log;
  */
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
+    private static final String TAG = EndlessScrollListener.class.getSimpleName();
     private boolean isLoading = false;
     private final static int minimum_threshold = 50;
     private long visibleThreshold = minimum_threshold;
@@ -27,7 +28,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
             this.isLoading = true;
         }
 
-        Log.v("Testing", "Checking loading " + isLoading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
+        Log.v(TAG, "Checking loading " + isLoading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
         if (!isLoading && (lastVisibleItemPosition > visibleThreshold)) {
             int currentPage = Math.round((float) totalItemCount / 99);
             loadNextPage(currentPage + 1);

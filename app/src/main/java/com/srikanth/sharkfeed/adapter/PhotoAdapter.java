@@ -107,7 +107,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         public void onClick(View v) {
             if (v instanceof ImageView) {
                 if (listener != null) {
-                    Log.v("Testing", "Clicked on " + getAdapterPosition());
                     listener.onHolderClick(getAdapterPosition());
                 }
             }

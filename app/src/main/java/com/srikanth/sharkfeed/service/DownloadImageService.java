@@ -48,7 +48,6 @@ public class DownloadImageService extends IntentService {
                 if (!file.mkdirs()) {
                     Log.e(TAG, "Directory not created");
                 }
-
             }
             Bitmap bitmap = downloadBitmap(url);
             if (bitmap != null) {
@@ -83,15 +82,14 @@ public class DownloadImageService extends IntentService {
                 return BitmapFactory.decodeStream(inputStream);
             }
         } catch (Exception e) {
-            Log.d("Testing", e.toString());
+            Log.d(TAG, "Error Downloading the image " + e.toString());
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            Log.w("Testing", "Error downloading image from " + url);
+            Log.w(TAG, "Error downloading image from " + url);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
-
             }
         }
         return null;
