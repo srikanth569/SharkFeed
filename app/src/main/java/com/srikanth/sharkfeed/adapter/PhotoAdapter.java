@@ -1,8 +1,10 @@
 package com.srikanth.sharkfeed.adapter;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,17 +58,18 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return new PhotoViewHolder(v, new PhotoViewHolder.HolderClickListener() {
             @Override
             public void onHolderClick(int position) {
-                Log.v("Testing", "holy crap i clicked on " + position);
+                Bundle bundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_from_right, R.anim.slide_out_from_left).toBundle();
                 Intent intent = new Intent(context, FullScreenActivity.class);
                 intent.putExtra("url", photos.get(position).getUrlL());
-                context.startActivity(intent);
+                context.startActivity(intent, bundle);
             }
         });
     }
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        Picasso.with(context).load(photos.get(position).getUrlC()).into(holder.image);
+        Picasso.with(context).load(photos.get(position).getUrlC()).
+                stableKey(photos.get(position).getId()).into(holder.image);
     }
 
     @Override

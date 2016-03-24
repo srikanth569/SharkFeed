@@ -29,7 +29,6 @@ public class ImageFeedService extends IntentService {
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
     private final static String EXTRA_PAGE_NUMBER = "extra_page_number";
-
     private final static String BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     private final static String API_KEY = "api_key=949e98778755d1982f537d56236bbb42";
     // Tags with which the images are tagged
@@ -91,6 +90,10 @@ public class ImageFeedService extends IntentService {
             e.printStackTrace();
             Log.v("Testing", "IO exception");
         }
+        notifyCompletion();
+    }
+
+    private void notifyCompletion() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
@@ -98,8 +101,8 @@ public class ImageFeedService extends IntentService {
                 EventBus.getDefault().post(new RefreshCompleteEvent());
             }
         });
-
     }
+
 
     private String buildUrlToQuery() {
         StringBuilder buffer = new StringBuilder();

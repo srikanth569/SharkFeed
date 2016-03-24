@@ -37,8 +37,8 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         }
         Log.v("Testing", "Checking loading " + loading + " lastVisibleItem " + lastVisibleItemPosition + " visibleThreshold " + visibleThreshold + " totalItemCount " + totalItemCount);
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
-            Log.v("Testing", "The next page is " + (totalItemCount % 99) + 1);
-            loadNextPage((totalItemCount / 99) + 1);
+            Log.v("Testing", "The next page is " + (int) (Math.floor(totalItemCount / 99) + 1));
+            loadNextPage((int) (Math.floor(totalItemCount / 99) + 1));
             loading = true;
         }
     }

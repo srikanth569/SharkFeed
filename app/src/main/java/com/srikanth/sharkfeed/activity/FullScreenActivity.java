@@ -37,8 +37,8 @@ public class FullScreenActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.full_screen_activity);
-        imageView = (ImageView) findViewById(R.id.imagecrap);
+        setContentView(R.layout.activity_full_screen);
+        imageView = (ImageView) findViewById(R.id.action_image);
         downloadButton = (Button) findViewById(R.id.download_image);
         openInFlickr = (Button) findViewById(R.id.open_in_flickr);
         openInFlickr.setOnClickListener(this);
