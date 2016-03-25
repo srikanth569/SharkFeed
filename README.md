@@ -9,7 +9,9 @@ Due to time limitations, I made the following assumptions while building this ap
 Assumptions made
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
  
-1 . The app is always connected to network.
-2 . Using only images that have urls for medium, large and original.
-3 . No rate limiting logic in place. 
+1 . The app is always connected to network.\n
+2 . Using only images that have urls for medium, large and original.\n
+3 . No rate limiting logic in place. \n
+4 . No Check to make sure device has enough memory to download image. \n
+5 . Original photo was not available for a lot of images coming down the API, so saving the large image instead. \n
 
